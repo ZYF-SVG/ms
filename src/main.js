@@ -12,8 +12,15 @@ import router from './router.js';
 import VueResource from 'vue-resource';
 // 手动开启
 Vue.use(VueResource);
+// 全局配置数据接口的根域名
+// Vue.http.options.root = "根域名"
 
-
+// 导入 node 中处理 时间的模块
+import moment from 'moment';
+// 定义全局过滤器
+Vue.filter('time' , function(data, csData="YYYY-MM-DD HH:mm-ss"){
+  return moment(data).format(csData);
+})
 
 // 引进 App.vue
 import App from './App.vue';

@@ -51,9 +51,9 @@ export default{
 
 .appBody{
     padding-top: 40px;
+    padding-bottom: 50px;
     /*给这个App界面做一个 如果超出屏幕宽度就 不显示，不计算，
     就不会导致一个组件要出场，一个要进场，导致撑大了app的宽度，导致界面出现滚动条*/
-    border: 1px solid #333;
     overflow-x: hidden;
 
     .mint-header{
