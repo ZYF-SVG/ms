@@ -26,10 +26,11 @@ Vue.filter('time' , function(data, csData="YYYY-MM-DD HH:mm-ss"){
 import App from './App.vue';
 
 // 按需导入 mint-ui 
-import { Header,  Swipe, SwipeItem } from 'mint-ui';  
+import { Header,  Swipe, SwipeItem, Button } from 'mint-ui';  
 Vue.component( Header.name, Header );
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);
+Vue.component(Button.name, Button);
 
 //  导入 Mui
 import './lib/mui-master/dist/css/mui.min.css';

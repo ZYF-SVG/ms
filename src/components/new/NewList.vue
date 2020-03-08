@@ -1,3 +1,4 @@
+<!-- 新闻列表组件 -->
 <template>
   <div>
     <ul class="mui-table-view">
@@ -46,7 +47,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 // ul
 .mui-table-view{
   li{
