@@ -14,11 +14,13 @@ import VueResource from 'vue-resource';
 Vue.use(VueResource);
 // 全局配置数据接口的根域名
 // Vue.http.options.root = "根域名"
+// 全局配置 emulateJSON ， post 请求的第三个参数
+Vue.http.options.emulateJSON = true ;
 
 // 导入 node 中处理 时间的模块
 import moment from 'moment';
 // 定义全局过滤器
-Vue.filter('time' , function(data, csData="YYYY-MM-DD HH:mm-ss"){
+Vue.filter('time' , function(data, csData="YYYY-MM-DD"){
   return moment(data).format(csData);
 })
 
