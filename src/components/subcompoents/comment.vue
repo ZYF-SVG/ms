@@ -46,12 +46,17 @@ export default {
       // console.log(this.id);
       this.$http.get('http://127.0.0.1:5000/comment?callback='+ this.id ).then( res =>{
         this.date = res.body.datas ;
-        console.log(res.body.datas[0]);
+        // console.log(res.body.datas[0]);
       }, err =>{
         console.log(err);
       })
     },
     postComment(){   // 点击提交数据按钮发生数据给服务器
+      // 检查文本域是否为空
+      if( this.texts.trim().length == 0 ){
+          return Toast('内容不能为空。');
+      }
+
       this.$http.post('http://127.0.0.1:5000/postcomment?callback=' + this.id , { content: this.texts })
       .then( res =>{
         Toast('发送成功');

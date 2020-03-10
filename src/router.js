@@ -8,8 +8,9 @@ import HomeContainer from './components/tabbar/HomeContainer.vue';
 import MemberContainer from './components/tabbar/MemberContainer.vue';
 import SearchContainer from './components/tabbar/SearchContainer.vue';
 import ShoppingContainer from './components/tabbar/ShoppingContainer.vue';
-import NewList from './components/new/NewList.vue';  // 新闻路由
+import NewList from './components/new/NewList.vue';  // 新闻资讯组件
 import NewsInfo from './components/new/NewsInfo.vue';  // 新闻内容组件
+import PhotoList from "./components/photo/photoList.vue" // 图片分享组件。
 
 // 创建一个路由实例
 var router = new VueRouter({  
@@ -23,7 +24,9 @@ var router = new VueRouter({
     // 新闻路由
     { path: '/home/newlise', component: NewList },
     // 新闻内容组件  用 id 来接收。
-    { path: '/home/newinfo/:id', component: NewsInfo }
+    { path: '/home/newinfo/:id', component: NewsInfo },
+    // 图片分享组件
+    { path: '/home/photolist',  component: PhotoList }
   ],
   linkActiveClass: 'mui-active'
 

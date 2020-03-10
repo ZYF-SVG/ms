@@ -53,7 +53,40 @@
       'status': 0
      ```
      - 会报 什么什么没有定义 之类的，以后要是见到之类问题，要想一下这个情况。
+     4. 做一些判断，当文本域为空时，提示  string.trim().lenght 。
      4. 要怎么解决用户名的问题！
 
+- 2020.3.10
+  - 点击 首页的 图片分享， 跳转页面，添加 图片分享 组件；
+  - 应用 mui 的 tab-top-webview-main.html 引入顶部滑动条， 小心里面的 mui-fullscreen 样式.
+  - 问题：
+   1. 导入成功，但滑动不了。
+    + 因为 mui 的这个功能使用到了 js 功能，要进入js [ https://dev.dcloud.net.cn/mui/ui/#scroll ], 这里说明了这个功能需要这个提供帮助初始化控件，其中的mui，就是 mui.js 中的功能。因此引入他
+    ```js
+    // 引入 mui.js 来初始化 顶部滑栏 控件
+    import mui from '../../lib/mui-master/dist/js/mui.js';
+    ```
+    并进行了初始化：
+    ```js
+      // 引入 mui.js 来初始化 顶部滑栏 控件
+      import mui from '../../lib/mui-master/dist/js/mui.js';
+      // 初始化
+      mui('.mui-scroll-wrapper').scroll({
+        deceleration: 0.0005  //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+      });
+    ```
+
+    2. 但是报： [Vue warn]: Invalid value for option "methods": expected an Object, but got Function. 错。修改了严格模式还是不行。是因为我把方法写成了函数，她是个对象。打自己。
+
+    3. 还报了 [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive. See <URL>， 添加一个css样式， `* { touch-action: none; } ` 阻止触发默认行为。
+
+    4. 从主页进到 分享图片 组件中，一开始是不能拖动滑动栏的，要刷新一下才能拖动。
+    - 在是因为在页面还没有初始化时，就调用了 控件的初始化方法，到后面页面初始化好了，就相当于没有调用 控件的初始化方法，解决在页面和data数据初始化好了，就进行 控件的调用。moumted 。
+
+    5. 我没有遇到 严格模式，严格模式报错的处理方法为：
+      - 下载处理包： `cnpm i babel-plugin-transform-remove-strict-mode -D`
+      - 然后到配置文件 .babelrc 中配置 ` 'plugins': [ ["transform-remove-strict-mode"] ] ` 这个参数，解除严格模式。
+
+    6.  mui 中的 顶部滑动栏 中js 和 底部栏的 mui-tab-item 类名有冲突，所以要改 App.vue 中的类名，先复制之前和  mui-tab-item 相关的样式， 在 App.vue 样式中从新定义，更改类名，然后再更改标签里面的 class 名。
 
 
