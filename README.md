@@ -90,3 +90,56 @@
     6.  mui 中的 顶部滑动栏 中js 和 底部栏的 mui-tab-item 类名有冲突，所以要改 App.vue 中的类名，先复制之前和  mui-tab-item 相关的样式， 在 App.vue 样式中从新定义，更改类名，然后再更改标签里面的 class 名。
 
 
+- 2020.3.11
+  - 添加图片列表的虚拟数据,只有 message 生成多个数据就好，status 不用。
+    ```js
+      // 图片分类
+    var photoList = Mock.mock({
+      "content":[
+        {
+          'status': 0,
+          'message|7':[ { 'title': "@cname", 'id|+1': 1 } ]
+        }
+      ]
+    })
+    ```
+  - 发送图片列表请求，获取列表数据，往获取的数据头部添加一个全部对象，id为0；
+  - 获取数据后，页面渲染，删除多余的属性；
+  - 更改默认选中样式，用 属性绑定 三元运算符来判断，如果 id 为 0 ，就给他蓝色的字体修饰；
+  ```html
+    <a :class="['mui-control-item',  item.id == 0 ? 'mui-active': '' ]" v-for="item in photolist" :key="item.id">
+            {{ item.title }}  
+    </a>
+  ```
+  - 用 mint-ui 的 懒加载 Lazy load，来加载 图片内容列表。
+  - 点击渲染不同的数据
+    1. 后端数据格式为：
+    ```js
+    //  评论数据
+    var comment = Mock.mock({
+      'comment|10': [   //comment[n]  来区分 第几列的
+        {
+          'status': 0,
+          'datas|10': [    // 每页的评论内容
+            {
+              'status': 0,
+              'message': 
+                { 'user_name': "@cname", 'add_time': "@Date", 'content': "@cparagraph(1)"}
+            }
+          ]
+        }
+      ]
+    })
+    ```
+    2. 前端获取数据后呢，有2个要注意的：
+      a. 页面一开始加载时，加载的是全部，也就是后端数据的第0项，所以我可以在调用 页面一加载调用 请求函数 时，给他一个实参 0 ，请求函数把 参数 传递到后端，拿到相应的数据。
+      b. 点击其他项，给 请求函数 传递本身对应的 id 值，作为实参。
+      ```js
+        created(){
+          this.getPhotoLists(0);  // 进入分享图片时，加载（是首页的，id 传递一个0，
+        },
+
+        <a v-for="item in photolist" :key="item.id" @click="getPhotoLists(item.id)">
+            {{ item.title }}  
+        </a>
+      ```
