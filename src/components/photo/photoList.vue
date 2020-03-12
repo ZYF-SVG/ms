@@ -20,10 +20,16 @@
     </div>
 
     <!-- 图片列表 -->
-    <ul>
-      <li v-for="item in getphotolists" :key="item.id">
+    <ul class="photo_ul">
+      <router-link tag="li" :to="'/home/photolnfo/' + item.id"  v-for="item in getphotolists" :key="item.id">
+        <!-- 图片部分 -->
         <img v-lazy="item.img_url">
-      </li>
+        <!-- 文字部分 -->
+        <div class="img_bottom">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.zhaiyao }}</p>
+        </div>
+      </router-link>
     </ul>
 
   </div>
@@ -83,10 +89,44 @@ export default {
   touch-action: none;
 }
 
-// 懒加载css属性
-img[lazy=loading] {
-  width: 40px;
-  height: 300px;
-  margin: auto;
+.photo_comment{
+  .photo_ul{
+    padding: 0 10px;
+    margin: 0;
+    li{
+      list-style: none;
+      position: relative;
+      text-align: center;
+      margin-bottom: 10px;
+      background-color: rgb(246, 241, 159);
+      img{
+        width: 100%;
+        vertical-align: middle;
+      }
+    // 懒加载css属性
+      img[lazy=loading] {
+        width: 40px;
+        height: 300px;
+        margin: auto;
+      }
+      // 文字部分
+      .img_bottom{
+        text-align: left;
+        position: absolute;
+        bottom: 0;
+        color: #ffff;
+        max-height: 90px;
+        background-color: rgba(0, 0, 0, 0.424);
+        h3{
+          font-size: 14px;
+        }
+        p{
+          color: #fff;
+          font-size: 13px;
+        }
+      }
+    }
+  }
 }
+
 </style>

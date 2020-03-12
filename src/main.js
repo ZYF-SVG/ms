@@ -27,6 +27,7 @@ Vue.filter('time' , function(data, csData="YYYY-MM-DD"){
 // 引进 App.vue
 import App from './App.vue';
 
+/*
 // 按需导入 mint-ui 
 import { Header,  Swipe, SwipeItem, Button, Lazyload } from 'mint-ui';  
 Vue.component( Header.name, Header );
@@ -34,6 +35,11 @@ Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);
 Vue.component(Button.name, Button);
 Vue.use(Lazyload); // 懒加载
+*/
+// 导入 mint-ui 的全部
+import MintUI from 'mint-ui';
+import "mint-ui/lib/style.css";
+Vue.use(MintUI);
 
 //  导入 Mui
 import './lib/mui-master/dist/css/mui.min.css';

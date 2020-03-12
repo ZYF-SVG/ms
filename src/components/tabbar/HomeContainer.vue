@@ -74,7 +74,7 @@ export default {
         .then(
           res => {
             this.luenbotu = res;
-            console.log(this.luenbotu);
+            // console.log(this.luenbotu);
           },
           err => {
             Toast("轮播图加载失败");

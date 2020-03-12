@@ -11,6 +11,7 @@ import ShoppingContainer from './components/tabbar/ShoppingContainer.vue';
 import NewList from './components/new/NewList.vue';  // 新闻资讯组件
 import NewsInfo from './components/new/NewsInfo.vue';  // 新闻内容组件
 import PhotoList from "./components/photo/photoList.vue" // 图片分享组件。
+import PhotoInFo from "./components/photo/photoInfo.vue";  // 图片详情组件
 
 // 创建一个路由实例
 var router = new VueRouter({  
@@ -26,7 +27,9 @@ var router = new VueRouter({
     // 新闻内容组件  用 id 来接收。
     { path: '/home/newinfo/:id', component: NewsInfo },
     // 图片分享组件
-    { path: '/home/photolist',  component: PhotoList }
+    { path: '/home/photolist',  component: PhotoList },
+    // 图片详情组件
+    { path: '/home/photolnfo/:id', component: PhotoInFo}
   ],
   linkActiveClass: 'mui-active'
 

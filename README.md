@@ -112,6 +112,23 @@
     </a>
   ```
   - 用 mint-ui 的 懒加载 Lazy load，来加载 图片内容列表。
+  ```html
+    <!-- v-lazy 是图片 -->
+    <ul class="photo_ul">
+      <li v-for="item in getphotolists" :key="item.id">
+        <img v-lazy="item.img_url">
+      </li>
+    </ul>
+  ```
+  ```css
+    /*懒加载css属性*/
+    img[lazy=loading] {
+      width: 40px;
+      height: 300px;
+      margin: auto;
+    }
+  ---
+  这里有个坑，官方文档的 css 属性是 images[xxx]{ xxx }, 我们是 img 标签。
   - 点击渲染不同的数据
     1. 后端数据格式为：
     ```js
@@ -131,15 +148,37 @@
       ]
     })
     ```
+    
     2. 前端获取数据后呢，有2个要注意的：
       a. 页面一开始加载时，加载的是全部，也就是后端数据的第0项，所以我可以在调用 页面一加载调用 请求函数 时，给他一个实参 0 ，请求函数把 参数 传递到后端，拿到相应的数据。
       b. 点击其他项，给 请求函数 传递本身对应的 id 值，作为实参。
-      ```js
-        created(){
-          this.getPhotoLists(0);  // 进入分享图片时，加载（是首页的，id 传递一个0，
-        },
+    ```js
+      created(){
+        this.getPhotoLists(0);  // 进入分享图片时，加载（是首页的，id 传递一个0，
+      },
 
-        <a v-for="item in photolist" :key="item.id" @click="getPhotoLists(item.id)">
-            {{ item.title }}  
-        </a>
+      <a v-for="item in photolist" :key="item.id" @click="getPhotoLists(item.id)">
+          {{ item.title }}  
+      </a>
+    ```
+
+- 2020.3.12
+  1. 完成懒加载功能，要全部导入 miui.ui 和 css 样式。这时要设置盛放图片的容器的背景颜色，因为懒加载是白色的，要是背景颜色为白色的就看不到他了，
+  2. 改每个li为 router-link 标签，点击他们进入 图片详情 组件页面，创建图片详情组件 photoInfo.vue , 在 分离路由 模块，注册组件，组件传递一个参数到 url 中，为当前图片的id值，点击进入时，发送请求数据给后端：
+    - 注意：
+      1. 必须为 router-link 标签渲染为 li 标签，不然页面样式会不好看。
+      2. to传递数据，在 路由模块时，必须要有参数接收。
+      3. 参数，图片详情 可以通过 this.$route.params.id 接收到，发起请求到后端的参数。
+  3. 我们的请求的数据是和 图片列表 数据一样的，因为我不知道后端数据是怎么样的，所以改成一样的，显示图片列表的数据 和 进入详情 的数据是一样的。
+    - 因为数据是这样的，第一列是1~10，第二列是11~20 ，后端就把他们的拿出来，创建一个数组接收 70 个数据，前端传递的数据是当前图片的id，id从1到70，这样比较容易弄。
+    - 后端用2层循环，把数据添加到数组中；
+      ```js
+      var content = [];  // 存储70个数据
+      for(var i=0; i<7; i++){
+        for(var j=0; j<10; j++){
+          content.push(data.getPhotoList.content[i].message[j]);
+        }
+      }
       ```
+
+  4. 引入 评论组件 ，需传入一个参数，为当前页的评论，我对后端数据逻辑不太了解，只能忽略了。
