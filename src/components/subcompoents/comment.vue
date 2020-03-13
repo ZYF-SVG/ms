@@ -1,7 +1,7 @@
 <!-- 评论组件 需要在引用的组件中注册的 -->
 <template>
   <div class="comment_max">
-    <h3>发布评论</h3>
+    <h3 class="comment_h3">发布评论</h3>
     <hr>
 
     <textarea placeholder="输入评论内容( 最多输入120个字 )" v-model="texts"></textarea>
@@ -82,8 +82,11 @@ export default {
   .comment_max{
     margin-top: 30px;
 
-    h3{
+    .comment_h3{
+      color: #333;
+      text-align: left;
       font-size: 16px;
+      margin: 0;
     }
 
     textarea{

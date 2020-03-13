@@ -182,3 +182,32 @@
       ```
 
   4. 引入 评论组件 ，需传入一个参数，为当前页的评论，我对后端数据逻辑不太了解，只能忽略了。
+
+- 2020.3.13
+  1. 引入缩列图，使用到 vue-preview 插件，官方网站： [https://github.com/LS1231/vue-preview]
+  - 查看官方文档，进行操作：
+    1. `cnpm i vue-preview -S` 下载插件；
+    2. 在 main.js 中导入
+    ```js
+    import VuePreview from 'vue-preview'
+    Vue.use(VuePreview)
+    ```
+    3. 复制html 结构到对应的组件中
+    ```html
+    <template>
+      <vue-preview :slides="slide1" @close="handleClose"></vue-preview>
+    </template>
+    ```
+    4. 最新的插件是通过 data 里面的值来渲染的，所以发起请求获取的值要存放到 data 中的 `slide1`，在赋值之前，需要对获取的值，添加几个必要的键值，分别是：
+    - h ：点击浏览时的高；
+    - w ：点击浏览时的宽；
+    - msrc ：未点击时展示的图片；
+    5. 然后记得在函数中添加这个方法： 
+    ```js
+    handleClose () {
+        console.log('close event')
+      }
+    ```
+    6. 渲染成功后，要修饰页面图片的话，要把 style 标签的scoped属性去掉，不然没有效果，但会污染到别的组件，所以在修饰时，最好起class名，不要用标签名，以上，今天写的更少了。
+    7. Problems loading reference 'https://schemastore.azurewebsites.net/schemas/json/package.json': Unable to load schema from 'https://schemastore.azurewebsites.net/schemas/json/package.json': read ECONNRESET.
+    出现了这个问题，不知道是哪里错了。
