@@ -52,7 +52,7 @@ export default{
     getthumbs(){
       this.$http.get('http://127.0.0.1:5000/getthumbs?callback='+this.id )
       .then( res =>{
-          console.log(res.body);
+          // console.log(res.body);
           res.body.forEach( item => {
             item.w = 600,
             item.h = 400,

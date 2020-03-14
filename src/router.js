@@ -12,6 +12,7 @@ import NewList from './components/new/NewList.vue';  // 新闻资讯组件
 import NewsInfo from './components/new/NewsInfo.vue';  // 新闻内容组件
 import PhotoList from "./components/photo/photoList.vue" // 图片分享组件。
 import PhotoInFo from "./components/photo/photoInfo.vue";  // 图片详情组件
+import GoodsList from "./components/good/GoodsList.vue"; // 商品列表组件
 
 // 创建一个路由实例
 var router = new VueRouter({  
@@ -29,7 +30,9 @@ var router = new VueRouter({
     // 图片分享组件
     { path: '/home/photolist',  component: PhotoList },
     // 图片详情组件
-    { path: '/home/photolnfo/:id', component: PhotoInFo}
+    { path: '/home/photolnfo/:id', component: PhotoInFo},
+    // 商品列表组件
+    { path: '/hone/goodslist', component: GoodsList }
   ],
   linkActiveClass: 'mui-active'
 

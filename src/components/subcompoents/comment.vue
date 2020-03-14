@@ -116,6 +116,7 @@ export default {
           line-height: 35px;
           font-size: 17px;
           text-indent: 2em;
+          overflow: hidden;
           p{
             color: #333;
           }
