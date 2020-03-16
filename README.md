@@ -221,3 +221,84 @@
     - 下一页，可以传递数据给后端，让后端传递每一页的数据，前端第一次默认传递出去的为0，可以在data里设置一个变量，默认值为0，当点击 加载更多 时，让整个变量自增，然后再调用请求函数，这时，传递的参数为1，就是下一页的数据。
     - 前端获取到下一页的数据，把他拼接在第一页数据的后面，就可以了，用 `concat`，进行数组的拼接，然后在点击数据中添加一个判断，判断页面，当页数超过后端传递过来的数据的页面时，显示 没有商品 了。
   4. 修改评论组件的评论内容，如果超出容量就截取，不显示。
+
+- 2020.3.15
+  1. 编程式导航，来进行路由的跳转。就是使用js来进行跳转，不是像之前的标签跳转如 a 标签等等。
+  -  我们平常的 编程式导航 是用 BOM 浏览器对象来进行跳转，但 vue 就是不想让我们操作 这些元素，所以提供了对应的方法，this.$router
+    - 步骤：
+    1. 和我们之前的很类似，创建一个路由组件（ 创建 goodsinfo.vue 组件；
+    2. 设置路由规则；
+    3. 在上一个路由组件中的跳转元素上进行事件绑定，触发函数，函数中使用 `this.$router` 的方法。
+  - this.$router 和 this.$route 方法很容易搞错：
+    - this.$route 的功能是 获取路由中参数的值。
+    - this.$router 是实现编程式导航。
+    在方法中，有4中实现方法：
+    ```js
+     //方法1 字符串
+    this.$router.push('/home/goodsinfo/' + id );  
+     //方法2 对象
+    this.$router.push({path: '/home/goodsinfo/'+id}); 
+    //方法3 name 路由的新属性，要在路由规则中定义， params 传递的参数，也要和路由规则中参数名一致。
+    // 在 router.js 中
+    { path: '/home/goodsinfo/:id', component: Goodsinfo, name: 'goodsinfo' }
+    // 组件方法中
+    this.$router.push({ name: 'goodsinfo', params: { id: id }})
+    //方法4 带查询参数，变成 /home/goodsinfo/?id=id, 这个是传递参数的第一种方式.
+    router.push({ path: '/home/goodsinfo/', query: { id: 'id' }})
+    ```
+
+  2. 用 miui 的 card 卡片样式，来搭建页面结构，一个单；一个页眉和内容；一个页眉、内容、页脚。
+
+  3. 分离轮播图，创建一个轮播图组件，这样就可以要的时候，可以调用了，
+    - 创建轮播图组件 swiper.vue,内容为：
+    ```html
+    <mt-swipe :auto="4000">
+      <mt-swipe-item v-for="item in lunbotuList" :key="item.url">
+        <img :src="item.img" />
+      </mt-swipe-item>
+    </mt-swipe>
+    ```
+    其中 `lunbotuList` 为渲染轮播图的图片数据，是根据每个调用的组件的数据，不同而定的，而且注意轮播图只渲染 img，如果是别的数据格式，要改一下数据成 item.img
+    ```js
+    export default{
+      props: : ['lunbotuList']  // 获取 父元素传递过来的值。
+    }
+    ```
+    - 调用轮播图组件步骤：
+    1. 导入轮播图组件
+    2. 注册组件 `components:{  swiper  }`
+    3. 写标签，然后用 数据绑定 传递数据
+    ```html
+     <swiper :lunbotuList="goodinfo_luenbotu" ></swiper>
+    ```
+    4. 如果请求的数据中没有 img ，就修改获取到是数据
+    ```js
+        getLuenBoTu(){
+      this.$http.get('http://127.0.0.1:5000/goodsinfo?callback='+ this.id ).then( res =>{
+          res.body.message.forEach( item => {
+            item.img = item.src  // 这里
+          });
+          this.goodinfo_luenbotu = res.body.message;
+      }, err =>{
+          console.log(err);
+      })
+    }
+    ```
+
+- 2020.3.16
+  1. 轮播图组件使用他的地方很多，但是有的地方里面的图片宽度要100%，有的不要，要的可以要有其他的样式，这时就要灵活处理了，就宽度来说：
+    - 首先，给轮播图组件 添加一个样式， 宽度100%，然后 props 添加一个接收参数，准备接收调用组件的人给组件传递一个 布尔值，然后在 vue 中使用 class 样式判断是否给他样式：
+    1. 在 swiper.vue 
+    添加一个样式：`.img_w{width: 100%;}`； 添加一个接收参数： `props: ['sf'] `；
+    在标签上书写class行间 ` <img :src="item.img" :class="{img_w: sf}"/>` 他会判断，如果这个 sf 为 true 就使用 img_w 这个类的样式； 如果为 false 就不用。
+    2. 在调用 轮播图 组件时，传递 fs 这个参数，告诉 轮播图组件 fs 的值。
+    ```html
+      <!-- 调用轮播图组件 -->
+      <swiper :lunbotuList="goodinfo_luenbotu" :sf="true"></swiper>
+    ```
+
+  2. 把 mui 的数字输入功能， 作为一个公共组件： 
+  - 需要初始化，首先导入mui.js 是 dist 文件夹里面的 mui.js 不是mui-master 下的 js 文件夹，不要导入错；
+  - 在 mouted() 函数里进行初始化；
+
+  3. 创建 图文介绍， 商品评论 组件，使用 编程导航 来切换组件。

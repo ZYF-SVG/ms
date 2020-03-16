@@ -5,7 +5,25 @@
     <!-- 包裹全部图片的div -->
     <div class="max_goos">
       <!-- 容器 -->
-      <div class="list_connent" v-for="item in goodslist" :key="item.id">
+      <!-- <router-link class="list_connent" v-for="item in goodslist" :key="item.id" 
+      :to="'/home/goodsinfo/'+ item.id" tag="div">
+        <img :src="item.img_url">
+        <div class="title">
+          <h3> {{ item.title }} </h3>
+        </div>
+        <div class="bottom">
+          <p class="price">
+            <span class="new">￥ {{ item.sell_price }} </span>
+            <span class="old">￥ {{ item.market_price }} </span>
+          </p>
+          <p class="situation">
+            <span>热卖中</span>
+            <span>剩 {{ item.stock_quantity }} 件</span>
+          </p>
+        </div>
+      </router-link> -->
+
+      <div class="list_connent" v-for="item in goodslist" :key="item.id" @click="goodsinfo(item.id)">
         <img :src="item.img_url">
         <div class="title">
           <h3> {{ item.title }} </h3>
@@ -57,6 +75,15 @@ export default {
         this.getGoosList();
       }
       
+    },
+    goodsinfo(id){   // 点击div，进行 编程式 路由跳转。
+    
+     // this.$router.push('/home/goodsinfo/' + id );   //方法1
+      
+     //  this.$router.push({path: '/home/goodsinfo/'+id});  //方法2
+
+     // name 路由的新属性，要在路由规则中定义， params 传递的参数，也要和路由规则中参数名一致。
+     this.$router.push({ name: 'goodsinfo', params: { id: id }})
     }
   },
   created(){

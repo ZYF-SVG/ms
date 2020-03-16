@@ -2,7 +2,12 @@
     <div class="appBody">
 
       <!-- 顶部部分 -->
-      <mt-header fixed title="项目2.0"></mt-header>
+      <mt-header fixed title="项目2.0">
+        <span slot="left" @click="HT">
+          <mt-button icon="back">返回</mt-button>
+        </span>
+        <mt-button icon="more" slot="right"></mt-button>
+      </mt-header>
 
       <!-- 中间切换部分 -->
       <transition>
@@ -41,9 +46,15 @@
 </template>
 
 <script>
-
-export default{
-
+export default {
+  data: function(){
+    return {}
+  },
+  methods: {
+    HT(){
+      this.$router.go(-1);
+    }
+  }
 }
 </script>
 

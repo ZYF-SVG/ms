@@ -13,6 +13,9 @@ import NewsInfo from './components/new/NewsInfo.vue';  // 新闻内容组件
 import PhotoList from "./components/photo/photoList.vue" // 图片分享组件。
 import PhotoInFo from "./components/photo/photoInfo.vue";  // 图片详情组件
 import GoodsList from "./components/good/GoodsList.vue"; // 商品列表组件
+import Goodsinfo from "./components/good/Goodsinfo.vue"; // 商品详情组件
+import GoodsDesc from "./components/good/GoodsDesc.vue"; // 商品图文介绍组件
+import GoodsComment from "./components/good/GoodsComment.vue"; //商品评论组件
 
 // 创建一个路由实例
 var router = new VueRouter({  
@@ -32,7 +35,13 @@ var router = new VueRouter({
     // 图片详情组件
     { path: '/home/photolnfo/:id', component: PhotoInFo},
     // 商品列表组件
-    { path: '/hone/goodslist', component: GoodsList }
+    { path: '/hone/goodslist', component: GoodsList },
+    // 商品详情组件
+    { path: '/home/goodsinfo/:id', component: Goodsinfo, name: 'goodsinfo' },
+    // 商品图文介绍
+    { path: '/home/goodsdesc/:id', component: GoodsDesc, name: 'goodsdesc'},
+    // 商品评论
+    { path: 'home/goodscomment/:id', component: GoodsComment, name: 'goodscomment' }
   ],
   linkActiveClass: 'mui-active'
 
