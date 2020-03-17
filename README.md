@@ -229,9 +229,9 @@
     1. 和我们之前的很类似，创建一个路由组件（ 创建 goodsinfo.vue 组件；
     2. 设置路由规则；
     3. 在上一个路由组件中的跳转元素上进行事件绑定，触发函数，函数中使用 `this.$router` 的方法。
-  - this.$router 和 this.$route 方法很容易搞错：
-    - this.$route 的功能是 获取路由中参数的值。
-    - this.$router 是实现编程式导航。
+    - this.$router 和 this.$route 方法很容易搞错：
+      - this.$route 的功能是 获取路由中参数的值。
+      - this.$router 是实现编程式导航。
     在方法中，有4中实现方法：
     ```js
      //方法1 字符串
@@ -239,12 +239,12 @@
      //方法2 对象
     this.$router.push({path: '/home/goodsinfo/'+id}); 
     //方法3 name 路由的新属性，要在路由规则中定义， params 传递的参数，也要和路由规则中参数名一致。
-    // 在 router.js 中
-    { path: '/home/goodsinfo/:id', component: Goodsinfo, name: 'goodsinfo' }
-    // 组件方法中
-    this.$router.push({ name: 'goodsinfo', params: { id: id }})
+      // 在 router.js 中
+      { path: '/home/goodsinfo/:id', component: Goodsinfo, name: 'goodsinfo' }
+      // 组件方法中
+      this.$router.push({ name: 'goodsinfo', params: { id: id }})
     //方法4 带查询参数，变成 /home/goodsinfo/?id=id, 这个是传递参数的第一种方式.
-    router.push({ path: '/home/goodsinfo/', query: { id: 'id' }})
+    this.$router.push({ path: '/home/goodsinfo/', query: { id: 'id' }})
     ```
 
   2. 用 miui 的 card 卡片样式，来搭建页面结构，一个单；一个页眉和内容；一个页眉、内容、页脚。
@@ -301,4 +301,26 @@
   - 需要初始化，首先导入mui.js 是 dist 文件夹里面的 mui.js 不是mui-master 下的 js 文件夹，不要导入错；
   - 在 mouted() 函数里进行初始化；
 
-  3. 创建 图文介绍， 商品评论 组件，使用 编程导航 来切换组件。
+  3. 创建 图文介绍、商品评论 组件，使用 编程导航 来切换组件。
+
+
+- 2020.3.17
+  1. 对 图文介绍 和 商品评论 组件进行了数据的渲染
+  2. 添加小球半场动画：
+  - 首先用 transition 标签包裹小球；
+  - css 修饰小球，用 v-show 对小球进行显示消失的控制，设置点击 添加购物车 触发事件，进行 布尔值的取反；
+  - 在 transition 标签上添加 动画钩子函数
+    - @before-enter=""  事件： 控制小球的初始位置。
+    - @enter=""         事件： 设置小球终点位置，设置小球过渡，`el.offsetWidth`强制动画刷新， `done()`调用 @after-enter 事件，立即执行事件。
+    - @after-enter=""   事件： 设置小球消失。
+  - 可给小球设置该过渡动画： `transition: all 1s cubic-bezier(.28,-0.2,.40,.50);`
+
+  3. 完善小球运动：
+  - 因为我们小球的终点的写死的固定位置，所以但y轴移动移动的位置或屏幕分辨率发生了变化，小球的终点就出现了问题。
+  - 技术点： 获取屏幕元素到屏幕的边框的距离。
+    1. 终点的y轴 = 图标到屏幕顶部的位置 - 小球原始位置到屏幕顶部的位置；
+    2. 终点的x轴 = 图标到左边屏幕的位置 - 小球原始位置到左边屏幕的位置；
+    3. 就可以得到小球的终点位置，是活的数据。
+    4. 用到 domObjec.getBoundingClientRect().上下左右 来获取。
+  - 步骤：
+    1. 获取各元素。

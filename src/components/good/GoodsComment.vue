@@ -1,13 +1,17 @@
 <!-- 商品评论组件 -->
 <template>
   <div>
-    <h3>pl</h3>
+    <comment :id="this.$route.params.id"></comment>
   </div>
 </template>
 
 <script>
-export default {
+import comment from "../subcompoents/comment.vue";
 
+export default {
+  components:{
+    comment
+  }
 }
 </script>
 

@@ -1,4 +1,4 @@
-<!-- 评论组件 需要在引用的组件中注册的 -->
+<!-- 评论组件 需要在引用的组件中注册的, 调用时需传入名为 id 的参数 -->
 <template>
   <div class="comment_max">
     <h3 class="comment_h3">发布评论</h3>
@@ -34,9 +34,7 @@ import { Toast } from "mint-ui"
 export default {
   data(){
     return {
-      date: { 
-        
-      },    // 存储评论数据
+      date: {},    // 存储评论数据
       texts: ''
     }
   },

@@ -2,6 +2,15 @@
 <template>
   <div class="goodsinfo_connent">
 
+    <!-- 加入购物车小球 -->
+    <transition
+      @before-enter="beforeEnter"
+      @enter="enter"
+      @after-enter="afterEnter"
+    >
+      <div class="ball"  ref="balla" v-show="switche"></div>
+    </transition>
+
     <!-- 顶部轮播图 -->
     <div class="mui-card">
       <div class="mui-card-content">
@@ -29,7 +38,7 @@
           <!-- 按钮 -->
           <div class="buttons">
             <mt-button type="primary" size="small">立即购买</mt-button>
-            <mt-button type="danger" size="small">加入购物车</mt-button>
+            <mt-button type="danger" size="small" @click="addcar">加入购物车</mt-button>
           </div>
         </div>
       </div>
@@ -64,7 +73,8 @@ export default {
     return {
       id: this.$route.params.id, // 获取路由中的id
       goodinfo_luenbotu: [],  // 接收请求的轮播图数据
-      goodsinfo: []  // 获取详情信息
+      goodsinfo: [],  // 获取详情信息
+      switche: false
     }
   },
   methods:{
@@ -91,7 +101,34 @@ export default {
     },
     goodcomment(id){ // 点击商品评论开启 编程导航
       this.$router.push({ name: 'goodscomment', id: id })
+    },
+    addcar(){   // 点击 添加购物车按钮
+      this.switche = !this.switche;
+    },
+    beforeEnter(el){  // 开始前  transform: translate(79px, 301px);
+      el.style.transform = "translate(0,0)";
+    },
+    enter(el, done){  // 开始的过程
+      el.offsetWidth;   // 大写的w
+
+      // 获取小球的位置 用 ref 来获取小球，
+      var ball = this.$refs.balla.getBoundingClientRect();
+      // 获取图片的位置 给 app 组件中 图标一个id，操作dom获取。
+      var label = document.getElementById('label').getBoundingClientRect();
+      //  获取 图标 的位置，活数据
+      var tubiaoX = label.left - ball.left;
+      var tubiaoY = label.top - ball.top;
+
+      // 字符串拼接 填入数据
+      el.style.transform = `translate(${tubiaoX}px, ${tubiaoY}px)`;
+      el.style.transition = "all 1s cubic-bezier(.28,-0.2,.40,.50) ";
+//  cubic-bezier(.4,-0.3,1,.48)
+      done();
+    },
+    afterEnter(el){  // 开始后
+       this.switche = !this.switche;
     }
+
   },
   created() {
     this.getLuenBoTu();
@@ -131,6 +168,18 @@ export default {
       button{
         margin-top: 10px;
       }
+    }
+    // 小球
+    .ball{
+      width: 15px;
+      height: 15px;
+      position: absolute;
+      top: 390px;
+      left: 149px;
+      z-index: 99;
+      border-radius: 50%;
+      background-color: red;
+          // transform: translate(79px, 301px);
     }
   }
   
