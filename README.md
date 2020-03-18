@@ -324,3 +324,44 @@
     4. 用到 domObjec.getBoundingClientRect().上下左右 来获取。
   - 步骤：
     1. 获取各元素。
+
+
+  
+
+- 2020.3.18
+  - 在改变 数字输入组件(goodsinfo_numbox.vue) 的数量时，把更改的数传递给 商品详情组件(Goodsinfo.vue) 页面
+  1. 涉及到子组件给父组件传值：
+    - 子组件给父组件传值，在父组件中定义一个函数，定义一个形参，在 子组件 标签上进行 事件绑定 @，子组件内部获取到事件，并传递文本框里改变的数据给 父元素。
+      - 技术点：
+      1. 来 data 里命名一个 变量，用来储存 *记录文本框改变的数据*；
+      2. 给 子组件标签绑定事件；
+      ```html
+       <numbox class="numbox" @cdi="selectedCount"></numbox>
+      ```
+      3. 在 设置函数形参，获取数据，改变 data 的值；
+      ```js
+      selectedCount(avalue){  
+        this.numvlue = avalue;  
+      }
+      ```
+      
+    - 获取文本框的数据： 数字输入组件 里面监听文本框的改变，数据一改变就调用函数，传递数据给父组件
+      - 技术点，
+      1. 监听文本框的改变，用 change 事件，改变文本框时，触发事件；
+      ```html
+            <input value="1" @change="getText" ref="atext"/>
+      ```
+      2. 用 ref 来获取 value 的值；`this.$refs.atext.value`
+      3. 在 `getText()` 函数里，调用 `this.$emit('cid', Number(this.$refs.atext.value) )` 来 返回数据给 父组件。返回的数据要是个数字类型的。
+
+    - 子组件获取到父组件库存的数量，从而改变 数字数组的最大值。
+    1. 父给子传值。绑定属性，绑定的值为父组件 发起请求获取的数据，因为发起的请求是 异步操作， 所以在传递给子组件时，还没有执行完成，传递的数据为空的，所以在 子组件 接收时，可以使用 watch 来进行监听数据的变化。
+    ```js
+        props:['numboxs'],  // 接收父组件传递的值
+        watch:{
+            'numboxs': function(newVal, oldVal){
+              //调用 mui 的 js api
+              mui('.mui-numbox').numbox().setOption('max', newVal);
+            }
+        }
+    ```

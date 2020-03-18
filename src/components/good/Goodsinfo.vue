@@ -33,7 +33,7 @@
           <!-- 数量选择 -->
           <div calss="number">
             购买数量：
-            <numbox class="numbox"></numbox>
+            <numbox class="numbox" @cdi="selectedCount" :numboxs="goodsinfo.stock_quantity"></numbox>
           </div>
           <!-- 按钮 -->
           <div class="buttons">
@@ -74,7 +74,8 @@ export default {
       id: this.$route.params.id, // 获取路由中的id
       goodinfo_luenbotu: [],  // 接收请求的轮播图数据
       goodsinfo: [],  // 获取详情信息
-      switche: false
+      switche: false,  // 小球的状态
+      numvlue: 1 // 存储 选择文本框 中的数据， 默认为 1 个。
     }
   },
   methods:{
@@ -96,7 +97,7 @@ export default {
       })
     },
     gooddesc(id){  // 点击图文介绍按钮开启 编程导航
-    console.log(0);
+      console.log(0);
       this.$router.push({ name: 'goodsdesc',  id: id })
     },
     goodcomment(id){ // 点击商品评论开启 编程导航
@@ -122,11 +123,15 @@ export default {
       // 字符串拼接 填入数据
       el.style.transform = `translate(${tubiaoX}px, ${tubiaoY}px)`;
       el.style.transition = "all 1s cubic-bezier(.28,-0.2,.40,.50) ";
-//  cubic-bezier(.4,-0.3,1,.48)
+      //cubic-bezier(.4,-0.3,1,.48)
       done();
     },
     afterEnter(el){  // 开始后
        this.switche = !this.switche;
+    },
+    selectedCount(avalue){  // 绑定到 数字输入组件 的事件。
+      this.numvlue = avalue;  // 获取子组件传递过来的值，并改变 data 里存储的数据，这样就可以使用拿到的数据了。
+      // console.log( typeof avalue);
     }
 
   },
