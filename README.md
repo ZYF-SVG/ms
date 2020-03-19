@@ -365,3 +365,66 @@
             }
         }
     ```
+
+- 2020.3.19
+  - 使用 vuex 事件管理模块，可以存放共享数据的：
+    1. 下载： `cnpm i vuex -S`
+    2. 导入: `import Vuex from 'vuex';  `
+    3. 注册  `Vue.use(Vuex); `
+    4. 创建 store 实例 
+      ```js
+        var store = new Vuex.Store({  // 创建 store 实例。
+        state: { },
+        mutations: { },
+        getters: { }
+      })
+      ```
+    5. 在 vm 实例中挂载： `store`
+  - 把数据添加到 vuex 中：
+    1. 当点击加入购物车，就把一些基本的数据添加到 vuex 里面，创建 `car : []` 来存储数据，存储的数据格式如下： `{ id，购买数量，价格，状态（购物车里的选中 }` 
+    2. 步骤： 
+      1） 在 Goodsinfo.vue 中的点击加入购物车事件中，先拼接好要返回的数据：
+      ```js
+        var goodsinfo = { 
+          id: this.id,  
+          count: this.numvlue, 
+          price: this.goodsinfo.sell_price, 
+          selected: true
+        }
+      ```
+      2） 在 main.js 中的 vuex 实例中，写 操作 car 的方法。
+      ```js
+        var store = new Vuex.Store({
+          state:{ 
+              car:[] // 存储购物车数据。
+          },
+          mutations: {
+            addToCar(state, goodsinfo){  // 接收数据
+              console.log(state.car);// 可以拿到 car 数据。
+            }
+          }
+        })
+      ```
+
+      3） 在 Goodsinfo.vue 中，调用 vuex 中 mutations 中定义的方法，传递参数过去。
+      ```js
+        // 调用 vuex 中定义的函数，传递数据
+      this.$store.commit('addToCar', goodsinfo);
+      ```
+
+      4） 在 main.js 中的 vuex 实例中，进行购物车加入 数据的逻辑处理：
+      ```js
+        mutations: {
+          addToCar(store, goodsinfo){
+            /*判断当购物车情况：
+            1，有同样商品时，增加数量；
+            2. 没有同样的商品时，添加新的参数进去*/
+            store.car.some( item =>{
+              if( item.id ==  goodsinfo.id){
+                  item.count += goodsinfo.count;
+                  return true;  // 当找到 id 相同时，就停止寻找。
+              }
+            })
+          }
+        }
+      ```

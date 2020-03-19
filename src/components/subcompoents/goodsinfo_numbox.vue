@@ -35,11 +35,11 @@ export default {
     mui('.mui-numbox').numbox(); 
   },
   props:['numboxs'],  // 接收父组件传递的值
-  watch:{        /* 用watch来监听，因为普通接收接收到的是 numboxs， 
-  因为 父组件 发起的请求是 异步操作，当执行到 属性绑定 传递给子组件数据时，还没有发起请求0数据；
-  所以，发送的数据为 numboxs， 接收也知道在哪个时期接收好，所以用 watch 来监听发送过来的数据，
-  迟早会发生过来真正的数据。
-  */
+  watch:{  
+     /* 用watch来监听，因为普通接收接收到的是 numboxs， 
+    因为 父组件 发起的请求是 异步操作，当执行到 属性绑定 传递给子组件数据时，还没有发起请求0数据；
+    所以，发送的数据为 numboxs， 接收也知道在哪个时期接收好，所以用 watch 来监听发送过来的数据，
+    迟早会发生过来真正的数据。*/
     'numboxs': function(newVal, oldVal){
       // console.log( newVal ); // 获取到数据，调用 js mui 的 API 方法，改变 数字输入框的 最大输入值。
       mui('.mui-numbox').numbox().setOption('max', newVal);

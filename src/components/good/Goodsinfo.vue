@@ -96,15 +96,26 @@ export default {
         Toast('读取数据失败');
       })
     },
-    gooddesc(id){  // 点击图文介绍按钮开启 编程导航
+    gooddesc(id){    // 点击图文介绍按钮开启 编程导航
       console.log(0);
       this.$router.push({ name: 'goodsdesc',  id: id })
     },
     goodcomment(id){ // 点击商品评论开启 编程导航
       this.$router.push({ name: 'goodscomment', id: id })
     },
-    addcar(){   // 点击 添加购物车按钮
+    addcar(){        // 点击 添加购物车按钮
       this.switche = !this.switche;
+
+      // 拼接好存放的数据
+      var goodsinfo = { 
+          id: this.id,  
+          count: this.numvlue, 
+          price: this.goodsinfo.sell_price, 
+          selected: true
+        }
+      
+      // 调用 vuex 中定义的函数，传递数据
+      this.$store.commit('addToCar', goodsinfo);
     },
     beforeEnter(el){  // 开始前  transform: translate(79px, 301px);
       el.style.transform = "translate(0,0)";
@@ -122,7 +133,7 @@ export default {
 
       // 字符串拼接 填入数据
       el.style.transform = `translate(${tubiaoX}px, ${tubiaoY}px)`;
-      el.style.transition = "all 1s cubic-bezier(.28,-0.2,.40,.50) ";
+      el.style.transition = "all 0.8s cubic-bezier(.28,-0.2,.40,.50) ";
       //cubic-bezier(.4,-0.3,1,.48)
       done();
     },
