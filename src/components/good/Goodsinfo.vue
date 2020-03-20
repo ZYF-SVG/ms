@@ -133,7 +133,7 @@ export default {
 
       // 字符串拼接 填入数据
       el.style.transform = `translate(${tubiaoX}px, ${tubiaoY}px)`;
-      el.style.transition = "all 0.8s cubic-bezier(.28,-0.2,.40,.50) ";
+      el.style.transition = "all 0.5s cubic-bezier(.28,-0.2,.40,.50) ";
       //cubic-bezier(.4,-0.3,1,.48)
       done();
     },

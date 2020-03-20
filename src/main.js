@@ -7,9 +7,13 @@ import router from './router.js'; // 导入分离式的路由文件
 
 import Vuex from 'vuex';  // 导入 vuex 模块
 Vue.use(Vuex);    // 在vue上注册
+
+var car = JSON.parse(localStorage.getItem('car') || '[]') ;
+
+
 var store = new Vuex.Store({  // 创建 store 实例。
   state: {
-    car: []  // 用来存放 点击加入购物车的数据。
+    car: car // 用来存放 点击加入购物车的数据。
   },
   mutations: {
     /* 创建操作 car 数据的处理方法，Goodsinfo.vue 通过调用这个方法，然后把拼接的数据
@@ -19,7 +23,6 @@ var store = new Vuex.Store({  // 创建 store 实例。
       1. 里面已有了该商品，但再买了几个，购物车里不会添加新的一条数据，只是添加了原来的商品的数量。
       2. 里面没有该商品，就添加新的数据。
     */
-    
     addToCar(store, goodsinfo){  // 注意参数
 
       var flag = false;  // 来表记 是否 有该商品。
@@ -35,14 +38,22 @@ var store = new Vuex.Store({  // 创建 store 实例。
 
       // car 里面没有同样的商品时
       if(flag == false){   // 这里写错了 写成了  flag == false
-        console.log('ol');
-        // store.car.push(goodsinfo);
+        store.car.push(goodsinfo);
       }
+
+      // 将处理好是car 存放一份到 本地存储里
+      localStorage.setItem('car', JSON.stringify(store.car));
 
     }
   },
-  getters: {
-
+  getters: {   // 功能： 监听数据变化触发函数； 过滤器。
+    getAllCount(state){  // 计算购物车里的数量，同步到购物车徽标（App.uve 去
+      var c = 0;
+      state.car.forEach( item =>{
+        c += item.count;
+      })
+      return c;   // 返回，调用函数时，就能得到 c
+    }
   }
 })
 

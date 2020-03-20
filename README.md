@@ -380,6 +380,7 @@
       })
       ```
     5. 在 vm 实例中挂载： `store`
+
   - 把数据添加到 vuex 中：
     1. 当点击加入购物车，就把一些基本的数据添加到 vuex 里面，创建 `car : []` 来存储数据，存储的数据格式如下： `{ id，购买数量，价格，状态（购物车里的选中 }` 
     2. 步骤： 
@@ -419,12 +420,97 @@
             /*判断当购物车情况：
             1，有同样商品时，增加数量；
             2. 没有同样的商品时，添加新的参数进去*/
+            var flag = false;
+
             store.car.some( item =>{
               if( item.id ==  goodsinfo.id){
+                   flag = true;
                   item.count += goodsinfo.count;
                   return true;  // 当找到 id 相同时，就停止寻找。
               }
             })
+
+            if(flag == false){
+              store.car.push(goodsinfo);
+            }
           }
         }
       ```
+
+- 2020.3.20
+  - 点击 加入购物车，让购物车徽标进行同步增加。
+    1. 在 main.js 的 vuex 实例中的 getters 定义一个方法，用来计算购物车中商品的数量，记得返回给函数。
+      ```js
+        getters: {   // 功能： 监听数据变化触发函数； 过滤器。
+          getAllCount(state){  
+            var c = 0;
+            state.car.forEach( item =>{
+              c += item.count;
+            })
+            return c;   // 返回，调用函数时，就能得到 c
+          }
+        }
+      ```
+    2. 在 App.vue 中的徽标显示数据处 调用 定义的计算商品数量的函数。
+      ```html
+         <span class="mui-badge" id="label"> {{ $store.getters.getAllCount }} </span>
+      ```
+
+  - 将购物车里的数据保存到本地存储中。
+    1. 在 main.js 中，在 addToCar() 函数处理car 数据后，把 car 里的数据存储到本地存储中：
+      ```js
+        localStorage.setItem('car', JSON.stringify(stort.car));
+      ```
+    2. 在 页面 加载时，从 本地存储 中拿取数据，同步到 store.car 中：
+    在 创建 store 实例前 定义一个变量，获取 数据，然后在 实例中赋予 car
+      ```js
+        var car = JSON.parse( localStorage.setItem('car') || '[]' );
+        /* 防止一开始本地存储可空的，读取到的为 null， null 赋予 car 可能会报错，car 为空的，下面的处理怎么进行 遍历，push 呢，所以要给他赋予一个 数组。 */
+
+        var store = new Vuex.Store({
+          state: {
+            car: car
+          }
+        })
+      ```
+
+
+    
+
+  - 渲染购物车组件样式
+
+  - 发起请求 获取 商品的数据，渲染购物车数据。
+    1. 从 vuex 中获取 car 数组中的购物车商品，循环遍历每一项，得到每一项商品的id，拿到多个id，以逗号分隔开，作为请求数据的参数，传递给后端。
+    2. 后端根据发送的 id， 返回数据给前端，前端拿到数据渲染到页面。
+      - 用之前的商品详情的数据，进行循环，全部拿出来赋予一个数组，然后把传递的参数们（id, 转换成数组，用 some 来进行判断 商品详情的数据中的id，和 参数中的id 相等，就 push 给一个新的数组，然后 把这个数组返回给前端。
+      ```js
+        //  商品购物车信息
+      app.get('/getcarinfo', function(req, res){
+        res.header('Access-Control-Allow-Origin', "http://localhost:3000");
+
+        // 获取传递过来的 id
+        var callback_arr = []
+        var urls = url.parse( req.url, true );
+        callback_arr = urls.query.callback.split(',');  // 1,2,4 => [ '1', '2', '4' ]
+      
+        // 获取 数据
+        var arrays = []
+        for(var i=0; i<3; i++){
+          for(var j=0; j<5; j++){
+            arrays.push(data.gooslist.content[i].message[j]);
+          }
+        }
+        var return_set = [];
+
+        arrays.some(item =>{   
+          for(var i=0; i<callback_arr.length; i++){ 
+            if( callback_arr [i] == item.id ){ 
+              return_set.push(item); 
+            }
+          }
+        })
+        
+        res.send(return_set);
+      })
+      ```
+    3. 渲染好后，之前的开关点不了了，原来的因为初始化时期不对的原因，之前没有数据的渲染，是在 *mouted ( 初始化阶段的最后一个阶段，把内存中渲染的data模板，挂载到页面上，刚刚渲染好，初始化的数据。)* 但 我们是在 发起请求 获取到数据，后才进行渲染页面的，也就是说 data 里的数据被我们改变了，所以要在 *运行阶段* 的 `updated` 阶段初始化开关。

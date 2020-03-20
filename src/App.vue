@@ -31,7 +31,7 @@
 
         <router-link class="mui-tab-item-yf" to="/shopping">
           <span class="mui-icon mui-icon-extra mui-icon-extra-cart">
-            <span class="mui-badge" id="label">0</span>
+            <span class="mui-badge" id="label"> {{ $store.getters.getAllCount }} </span>
           </span>
           <span class="mui-tab-label">购物车</span>
         </router-link>
