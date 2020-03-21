@@ -514,3 +514,39 @@
       })
       ```
     3. 渲染好后，之前的开关点不了了，原来的因为初始化时期不对的原因，之前没有数据的渲染，是在 *mouted ( 初始化阶段的最后一个阶段，把内存中渲染的data模板，挂载到页面上，刚刚渲染好，初始化的数据。)* 但 我们是在 发起请求 获取到数据，后才进行渲染页面的，也就是说 data 里的数据被我们改变了，所以要在 *运行阶段* 的 `updated` 阶段初始化开关。
+
+
+- 2020.3.21
+  - 同步 数字输入框 的数据：
+    1. 循环 car 本地存储中的数据，拿出id 和 cou，拼接成一个数组，格式为 `{ id:cou }`，id作为 键， cou 作为 值；这样才可以 `数组.id` 就能拿到对应的数量， 在进行请求数据渲染的时候，数据里面有id这一项， 我们可以把他作为我们的索引，来输出我们数组中 id 对应的 cou。
+      - 步骤：
+        1. 循环 本地数据就就是 car 中的值，拿出每一项的 id 和 count, 组成 {id:count} ==> {1：3} 
+        ```js  
+          getgoodsinfomun(state){  // 在 vuex 的 getters 中
+            var counts = {};
+            state.car.forEach( item =>{
+              counts[item.id] = item.count;
+            })
+            return counts;
+          }
+        ```
+        这里要记住，创建的 counts 要是对象，才可以  `counts[item.id] = item.count;` 写, 如果是 [], 要用 push 方法：
+        ```js
+           state.car.forEach( item => {
+            counts.push( {id:item.id , count:item.count} );  // =>  { id:xx, count:xx }
+          })
+        ```
+        但不是我们要的结果。
+        
+        2. 在 商品详情组件 中，调用 `$store.getters.方法名` 的方法获取 vuex 中的数据，再用 属性绑定 传递给 数字输入组件。
+        ```html
+          <shopcar-numbox class="numbox" :shoppingId="$store.getters.getgoodsinfomun[item.id]"></shopcar-numbox>
+        ```
+        用 之前请求的数据中的id值，来获取每条数据的id。
+
+        3. 数字输入组件  用 `props:['方法名']` 接收到, 然后渲染上页面。
+        ```html
+            <input id="test" class="mui-input-numbox" type="number" :value="shoppingId"/>
+        ```
+
+  - 点击 购物车组件 上的 数字输入框，将数据同步到     

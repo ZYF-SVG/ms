@@ -8,12 +8,13 @@ import router from './router.js'; // 导入分离式的路由文件
 import Vuex from 'vuex';  // 导入 vuex 模块
 Vue.use(Vuex);    // 在vue上注册
 
-var car = JSON.parse(localStorage.getItem('car') || '[]') ;
 
+// 页面加载时，从浏览器本地存储中拿取 car 的数据
+var car = JSON.parse(localStorage.getItem('car') || '[]') ;
 
 var store = new Vuex.Store({  // 创建 store 实例。
   state: {
-    car: car // 用来存放 点击加入购物车的数据。
+    car: car // 用来存放 点击加入购物车的数据。本地存储数据 赋予 car 
   },
   mutations: {
     /* 创建操作 car 数据的处理方法，Goodsinfo.vue 通过调用这个方法，然后把拼接的数据
@@ -36,11 +37,9 @@ var store = new Vuex.Store({  // 创建 store 实例。
         }
       });
 
-      // car 里面没有同样的商品时
-      if(flag == false){   // 这里写错了 写成了  flag == false
+      if(flag == false){    // car 里面没有同样的商品时
         store.car.push(goodsinfo);
       }
-
       // 将处理好是car 存放一份到 本地存储里
       localStorage.setItem('car', JSON.stringify(store.car));
 
@@ -53,8 +52,21 @@ var store = new Vuex.Store({  // 创建 store 实例。
         c += item.count;
       })
       return c;   // 返回，调用函数时，就能得到 c
+    },
+    getgoodsinfomun(state){  // 循环 car 里的数据，拿到id和count，组成 {id:count} ==> {1：3}
+      var counts = {};
+     
+
+      state.car.forEach( item =>{
+          counts[item.id] = item.count;
+      /*var myMap = new Map();
+        myMap.set(item.id, item.count);  使用字典，往里面添加 key：item.id 和 value: item.count
+        console.log(myMap.get(1));  字典的调用。*/
+      })
+      return counts;
     }
   }
+
 })
 
 import VueResource from 'vue-resource'; // 导入 vue-resource 发起请求模块

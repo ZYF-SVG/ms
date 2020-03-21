@@ -1,3 +1,4 @@
+<!--购物车组件-->
 <template>
   <div class="shopping_contaier">
     <!-- 商品 -->
@@ -6,8 +7,7 @@
         <div class="mui-card-content">
           <div class="mui-card-content-inner">
             <!-- 开关 -->
-            <span></span>
-            <div class="mui-switch mui-switch-blue mui-switch-mini mui-active">
+            <div class="mui-switch mui-switch-blue mui-switch-mini ">
               <div class="mui-switch-handle"></div>
             </div>
 
@@ -20,7 +20,10 @@
               <p class="con_b"> 
                 <span>￥{{ item.sell_price }} </span>
                 <!-- 新数字输入组件 -->
-                <shopcar-numbox class="numbox"></shopcar-numbox>
+                <shopcar-numbox class="numbox" :shoppingcount="$store.getters.getgoodsinfomun[item.id]"
+                :shoppingId="item.id">
+
+                </shopcar-numbox>
                 <a href="javascript:;">删除</a>
               </p>
             </div>
@@ -46,7 +49,7 @@
 import mui from "../../lib/mui-master/dist/js/mui.js";
 import shopcar_numbox from '../subcompoents/shopcar_numbox.vue';
 
-export default{
+export default {
   data: function(){
     return {
       goodsinfo: []  // 存储购物车商品数据。
@@ -75,13 +78,10 @@ export default{
   created(){
     this.getGoodsinfo();
   },
-  // mounted(){
-  //   mui('.mui-switch')['switch']();  // 初始化 开关按钮。
-  // },
-  updated(){
+  updated(){     // 当data数据改变时，页面数据 和 data 同步时。初始化开关
       mui('.mui-switch')['switch']();
   },
-  components:{
+  components:{   // 注册组件
     'shopcar-numbox': shopcar_numbox   // 注册 数字输入组件
   }
 }
@@ -98,10 +98,17 @@ export default{
     display: flex;
     align-items: center;   // 垂直居中 
     padding: 15px 10px;
+    .mui-switch{  // 开关
+      width: 40px;
+    }
     img{
+      margin-left: 10px;
       width: 60px;
     }
     .conter {  // 文字部分
+      width: 200px;
+      text-align: center;
+      margin-left: 10px;
       // display: flex;
       // flex-direction: column;
       // justify-content: space-between;
@@ -115,13 +122,11 @@ export default{
         color: #333;
       }
       .con_b{
+        
         span{
           color: red;
           font-weight: bold;
           font-size: 14px;
-        }
-        .numbox{
-          margin: 0 5px;
         }
       }
       

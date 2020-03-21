@@ -71,7 +71,7 @@ import { Toast } from "mint-ui"
 export default {
   data: function(){
     return {
-      id: this.$route.params.id, // 获取路由中的id
+      id: parseInt(this.$route.params.id), // 获取路由中的id
       goodinfo_luenbotu: [],  // 接收请求的轮播图数据
       goodsinfo: [],  // 获取详情信息
       switche: false,  // 小球的状态
@@ -105,15 +105,14 @@ export default {
     },
     addcar(){        // 点击 添加购物车按钮
       this.switche = !this.switche;
-
-      // 拼接好存放的数据
-      var goodsinfo = { 
+      
+      var goodsinfo = {    // 拼接好存放的数据
           id: this.id,  
           count: this.numvlue, 
           price: this.goodsinfo.sell_price, 
           selected: true
         }
-      
+        
       // 调用 vuex 中定义的函数，传递数据
       this.$store.commit('addToCar', goodsinfo);
     },
