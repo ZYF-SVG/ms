@@ -3,11 +3,13 @@
   <div class="shopping_contaier">
     <!-- 商品 -->
     <div class="information">
-      <div class="mui-card" v-for="item in goodsinfo" :key="item.id">
+      <div class="mui-card" v-for="(item, i) in goodsinfo" :key="item.id">
         <div class="mui-card-content">
           <div class="mui-card-content-inner">
             <!-- 开关 -->
-            <div class="mui-switch mui-switch-blue mui-switch-mini ">
+            <div class="mui-switch mui-switch-blue mui-switch-mini"
+             @toggle="selectButton(item.id)" 
+             :class="[ select[item.id] ? 'mui-active':'']">
               <div class="mui-switch-handle"></div>
             </div>
 
@@ -24,20 +26,35 @@
                 :shoppingId="item.id">
 
                 </shopcar-numbox>
-                <a href="javascript:;">删除</a>
+                <a href="javascript:;" @click="remove(item.id, i)">删除</a>
               </p>
             </div>
           </div>
         </div>
 			</div>
+
+      <!-- <p>{{$store.getters.getgoodsinfoButton}}</p> -->
     </div>
+    
 
     <!-- 购物量 -->
     <div class="ss">
       <div class="mui-card">
 				<div class="mui-card-content">
 					<div class="mui-card-content-inner">
-						这是一个最简单的卡片视图控件；卡片视图常用来显示完整独立的一段信息，比如一篇文章的预览图、作者信息、点赞数量等
+            <!-- 结算框 -->
+						<div class="js">
+              <div class="left">
+                <p>总计（不包含运费）</p>
+                <p>
+                  已选商品 <span>0</span> 件;
+                  总价 <span>￥0</span>
+                </p>
+              </div>
+              <mt-button type="danger" size="normal" class="right">
+                结算
+              </mt-button>
+            </div>
 					</div>
 				</div>
 			</div>
@@ -52,14 +69,14 @@ import shopcar_numbox from '../subcompoents/shopcar_numbox.vue';
 export default {
   data: function(){
     return {
-      goodsinfo: []  // 存储购物车商品数据。
+      goodsinfo: [],  // 存储购物车商品数据。
+      select: this.$store.getters.getgoodsinfoButton
     }
   },
   methods: {
     getGoodsinfo(){  // 发起请求获取购物车商品数据。
       //1. 获取 vuex 中的商品每个id
       var idarr = []; // 创建存储id的数组
-
       this.$store.state.car.forEach(item =>{
         idarr.push(item.id);   // 把循环的每一项商品的id添加到 idarr 中。
       });
@@ -73,6 +90,19 @@ export default {
       }, err =>{
         console.log(err);
       })
+    },
+    remove(id, index){   // 点击删除触发事件
+      this.$store.commit('vuexRemove', {id})
+      // console.log("id:"+ id, ', 索引:' +index);
+      // 进行页面上，商品列表的删除
+      this.goodsinfo.splice( index , 1 );
+    },
+    selectButton(id){   // 开关触发事件
+      if(event.detail.isActive){  // 开
+        this.$store.commit('vuexSelectButton', { id:id, select:true })
+      }else{  // 关
+        this.$store.commit('vuexSelectButton', { id:id, select:false })
+      }
     }
   },
   created(){
@@ -130,6 +160,22 @@ export default {
         }
       }
       
+    }
+  }
+
+  .ss{   //购物量
+    .js{
+      width: 100%;
+      display: flex;
+      justify-content: space-between; // 左右对齐
+      align-items: center; // 居中
+      .left{
+        span{
+          color: red;
+          font-weight: bold;
+          font-size: 16px;
+        }
+      }
     }
   }
 }

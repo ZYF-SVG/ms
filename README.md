@@ -549,4 +549,167 @@
             <input id="test" class="mui-input-numbox" type="number" :value="shoppingId"/>
         ```
 
-  - 点击 购物车组件 上的 数字输入框，将数据同步到     
+  - 点击 购物车组件 上的 数字输入框，将最新的数据同步到 购物车的car 和 本地存储中：
+    步骤：
+      1. 在 购物车数字输入组件 中，获取到改变的数量值。
+        - 使用 ref 获取到input元素的value，给标签绑定 change 方法，文本框内容改变就触发指定的函数。
+          ```html
+            <input type="number" readonly :value="shoppingcount" ref="inputVlue" @change="countChanged"/>
+          ```
+          ```js
+            countChanged(){  //数据改变时触发  }
+          ```
+        
+      2. 因为有多个商品，想要区分多个商品，从 购物车组件 中传递每个商品的id，给 数字输入组件子组件，子组件接收 传递的 id 
+      ```props: ['shoppingcount', 'shoppingId'] ```
+
+      3. 因为 vuex 的处理要知道 改变的商品 和 改变的数量； 数字输入组件 他有， 所以用 vuex 的 mutations 中定义的方法的参数传递过去。
+        ```js
+          countChanged(){  
+            this.$store.commit('mutations中定义的方法',{  
+              id: this.shoppingId , 
+              count: parseInt(this.$refs.inputVlue.value) 
+            })
+          }
+        ```
+
+      4. 传递给 main.js 中的 vuex， 同步到 car 和 本地存储 中。     
+        ```js
+        updatecounts(state, goodsinfo){  
+          state.car.some( item =>{
+            if(item.id == goodsinfo.id){
+              item.count = goodsinfo.count;
+              return true;  
+            }
+          })
+          localStorage.setItem('car', JSON.stringify(state.car));
+        }
+        ```
+        要注意 `return true` 的位置。
+
+- 2020.3.22
+  - 点击购物车组件中 删除 ，进行数据的删除。
+    1. 删除 vuex 中的 car，本地存储中的数据是从 car 中输入的，所以只有在输入 key 值，一样的，就可以把之前的数据代替掉。car 和 本地存储 就处理完毕了。
+      - 操作：
+        1. 删除哪个商品，要从 购物车组件 中传递当前 id 给 vuex 中的 mutations 处理。为 购物车组件 的删除绑定点击事件，参数为 item.id
+          ```html
+             <a href="javascript:;" @click="remove(item.id)">删除</a>
+          ```
+        
+        2. 执行函数时，传递 id 给 vuex，让他知道要删除的是那个商品；
+          ```js
+            remove(id){
+              this.$state.commit('方法名', {id});
+            }
+          ```
+        
+        3. 在 vuex 中，定义处理事务的方法,进行 car 和 本地存储的删除、更新。
+          ```js
+            //1. 判断 car 中数据的id，和传递的id，一样的，就使用 splice() 方法进行删除，使用 索引值比较容易。
+            vuexRemove(state, goodsinfo){
+              state.car.some( (item, i) =>{
+                if(item.id == goodsinfo.id){
+                  state.car.splice(i, 1);
+                  return true;
+                }
+              })
+              // 2.进行 本地存储 的更新
+              localStorage.setItem('car', JSON.stringify(state.car));
+              localStorage.setItem('car', JSON.stringify(state.car));
+            }         
+          ```
+
+    2. 还要删除什么吗？
+      - 点击删除后，删除了 car 和更新 本地存储 后，发现页面上还有之前商品的列表，剩一个壳子，所以要再 删除 购物车组件 中的 渲染数据集。
+      - 操作：
+        1. 购物车组件： 给数据渲染添加一个索引i，
+        ```html
+          <a href="javascript:;" @click="remove(item.id, i)">删除</a>
+        ```
+        2. 在 remove 函数体里，进行 goodsinfo 数据的删除：
+        ```js
+        remove(id, index){
+          this.goodsinfo.splice( index , 1 );
+        }
+        ```
+
+    3. 点击开关，同步 开关状态。
+      - 操作：
+        1. 在 mui 中的 switch 提供一个方法，可以在开和关触发事件，是分开的，可以进行不同的操作。
+          ```html
+            <!-- toggle 事件，开关点击触发。 -->
+            <div @toggle="selectButton(item.id)"></div>
+          ```
+          ```js
+            selectButton(){   // 开关触发事件
+              if(event.detail.isActive){  
+                    // 开
+              }else{  
+                    // 关
+              }
+            }
+          ```
+        2. 在 vuex 中处理 开关 和 car 和 本地存储数据的同步的事务:
+          - 循环car，把点击开关的商品的 selected 改变；为区分商品，我们要在 购物车组件中传递过来, 和 改商品在 开 和 关 的 select 的值。
+            ```js
+              selectButton(id){   // 开关触发事件
+                if(event.detail.isActive){  // 开
+                  this.$store.commit('mutations中的方法名', { id:id, select:true })
+                }else{  // 关
+                  this.$store.commit('mutations中的方法名', { id:id, select:false })
+                }
+              }
+            ```
+        3. vuex 中，我们根据传递过来的参数，改变 car 和 本地存储数据。
+          ```js
+          mutations(){
+             vuexSelectButton(state, goodsinfo){
+              state.car.some( item => {
+                if(item.id == goodsinfo.id){
+                  item.selected = goodsinfo.select;
+                  return true;
+                }
+              })
+              localStorage.setItem('car', JSONstringify(state.car));
+            }
+          }
+          ```
+
+        4. 可以进行数据的同步了， 点击开，car 的 `selected:true`, 关: `selected: false`, 但是 页面 还没有同步。
+
+        5. 在 vuex 的 getters 中，我们拼接一个对象，内容为 `商品id: 商品状态`。`{id : select}`, 传递到 购物车页面，在渲染页面上，我们可以根据 id 获取到 各个商品的状态； 再开关 有 `.mui-switch` 这个样式就是显示开的状态；我们可以用 class 、 属性绑定、 三元运算符 来根据 商品状态 进行开关样式 处理。
+          ```js
+           // vuex
+           getters:{
+             getgoodsinfoButton(state){
+               var buttonArray = {};
+               state.car.forEach( item =>{
+                 buttonArray[item.id] = item.selected;
+               })
+               return buttonArray;
+             }
+           }
+          ```
+        然后在 购物车页面 中调用，存储在 data 中，利用属性绑定拿到值： 
+          ```js
+           // 购物车组件
+           data: function(){
+             return {
+                select: this.$store.getters.getgoodsinfoButton
+                // { 1:true,  2: false,  4:true } 可以根据 点 id 获取状态。
+             }
+           }
+          ```
+        然后在 html 页面上的 开关标签上：
+          ```html
+             <div @toggle="selectButton(item.id)" 
+             :class="[ select[item.id] ? 'mui-active':'']"></div>
+          ```
+
+        然后就 OK 了。
+
+
+
+
+  - 疑问： 本地存储 存储时，如果存储的 key 是一样的，那后者会不会代替前者的数据。
+    - 答： 应该会的，因为 key 值，一样，像 {} 一样。

@@ -20,8 +20,12 @@ export default {
     }
   },
   methods:{
-    countChanged(){
-      console.log(this.$refs.inputVlue.value);
+    countChanged(){    // 调用 vuex muntions 方法，传递 最新数量 和 id 过去 和 执行方法。
+      // console.log(this.$refs.inputVlue.value); // 数字输入框的内容
+      this.$store.commit('updatecounts',{  // 调用 vuex 实例中的函数
+        id: this.shoppingId ,   // 商品id
+        count: parseInt(this.$refs.inputVlue.value) // 最新数量 
+      })
     }
   },
   mounted(){
