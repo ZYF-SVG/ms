@@ -47,8 +47,8 @@
               <div class="left">
                 <p>总计（不包含运费）</p>
                 <p>
-                  已选商品 <span>0</span> 件;
-                  总价 <span>￥0</span>
+                  已选商品 <span> {{ $store.getters.getNumberPrice.counts }} </span> 件;
+                  总价 <span>￥{{ $store.getters.getNumberPrice.price }} </span>
                 </p>
               </div>
               <mt-button type="danger" size="normal" class="right">

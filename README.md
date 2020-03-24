@@ -709,6 +709,27 @@
         然后就 OK 了。
 
 
+- 2020.3.24
+  1. 计算购物车中的 总价 和 总数量。
+    - 在 vuex 的 getters 中，首先判断商品的状态是不是 true 如果是，就进行计算：
+      ```js
+        getters:{
+          var arrays = {
+            counts: 0,
+            price: 0
+          }
+          getNumberPrice(state){
+            state.car.forEach( item =>{
+              arrays.counts += item.count;
+              arrays.price += item.count * item.price
+            })
+            return arrays;
+          }
+        }
+      ```
+    - 然后在 App.vue 中显示 数据的地方进行调用。
+  2. 返回按钮功能。
+
 
 
   - 疑问： 本地存储 存储时，如果存储的 key 是一样的，那后者会不会代替前者的数据。

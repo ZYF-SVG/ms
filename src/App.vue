@@ -3,7 +3,7 @@
 
       <!-- 顶部部分 -->
       <mt-header fixed title="项目2.0">
-        <span slot="left" @click="HT">
+        <span slot="left" v-show="flag" @click="HT">
           <mt-button icon="back">返回</mt-button>
         </span>
         <mt-button icon="more" slot="right"></mt-button>
@@ -48,11 +48,30 @@
 <script>
 export default {
   data: function(){
-    return {}
+    return {
+      flag: true
+    }
   },
   methods: {
     HT(){
       this.$router.go(-1);
+    }
+  },
+  created(){
+    // 页面初始化时，没有引起 路由的改变，就不知道 watch 监听的 $route.path 是否改变，在初始化时，也进行一个判断
+    if(this.$route.path == '/home'){
+        this.flag = false;
+      }else{
+        this.flag = true;
+      }
+  },
+  watch:{ 
+    "$route.path": function(newVal){  // 监听路由的改变
+      if(newVal == '/home'){
+        this.flag = false;
+      }else{
+        this.flag = true;
+      }
     }
   }
 }

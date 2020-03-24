@@ -99,6 +99,19 @@ var store = new Vuex.Store({  // 创建 store 实例。
         buttonArray[item.id] = item.selected;
       })
       return buttonArray;
+    },
+    getNumberPrice(state){  // 计算购物车 总价 和 总数量。
+      var arrays = { 
+        counts: 0,  // 数量
+        price: 0    // 价格
+      }
+      state.car.forEach( item =>{
+        if(item.selected){
+          arrays.counts += item.count; 
+          arrays.price += item.price * item.count
+        }
+      })
+      return arrays;
     }
   }
 
