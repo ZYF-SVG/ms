@@ -2,7 +2,7 @@
     <div class="appBody">
 
       <!-- 顶部部分 -->
-      <mt-header fixed title="项目2.0">
+      <mt-header fixed title="百宝袋">
         <span slot="left" v-show="flag" @click="HT">
           <mt-button icon="back">返回</mt-button>
         </span>
@@ -24,9 +24,9 @@
           <span class="mui-tab-label">首页</span>
         </router-link>
 
-        <router-link class="mui-tab-item-yf" to="/member">
-          <span class="mui-icon mui-icon-contact mui-icon-icon-contact-filled"></span>
-          <span class="mui-tab-label">会员</span>
+        <router-link class="mui-tab-item-yf" to="/search">
+          <span class="mui-icon mui-icon-search"></span>
+          <span class="mui-tab-label">搜索</span>
         </router-link>
 
         <router-link class="mui-tab-item-yf" to="/shopping">
@@ -36,9 +36,9 @@
           <span class="mui-tab-label">购物车</span>
         </router-link>
 
-        <router-link class="mui-tab-item-yf" to="/search">
-          <span class="mui-icon mui-icon-search"></span>
-          <span class="mui-tab-label">搜索</span>
+        <router-link class="mui-tab-item-yf" to="/member">
+          <span class="mui-icon mui-icon-contact mui-icon-icon-contact-filled"></span>
+          <span class="mui-tab-label">登录</span>
         </router-link>
 		  </nav>
 

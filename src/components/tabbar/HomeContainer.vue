@@ -52,11 +52,16 @@
         >
       </li>
     </ul>
+
+    <!-- 二手商品列表组件 -->
+    <second></second>
+
   </div>
 </template>
 
 <script>
 import { Toast } from "mint-ui";
+import Secondhand from "../second-hand/Secondhand.vue"
 
 export default {
   data: function() {
@@ -86,6 +91,9 @@ export default {
   created() {
     // data 已经初始化了，调用 轮播图 的请求图片的函数。
     this.luenbotus();
+  },
+  components: {
+    second: Secondhand
   }
 };
 </script>
@@ -96,15 +104,16 @@ export default {
   height: 200px;
 
   .mint-swipe-item {
-    &:nth-child(1) {
-      background-color: aqua;
-    }
-    &:nth-child(2) {
-      background-color: antiquewhite;
-    }
-    &:nth-child(3) {
-      background-color: bisque;
-    }
+    background-color: #D5D0D0;
+    // &:nth-child(1) {
+    //   background-color: aqua;
+    // }
+    // &:nth-child(2) {
+    //   background-color: antiquewhite;
+    // }
+    // &:nth-child(3) {
+    //   background-color: bisque;
+    // }
   }
 
   img {
